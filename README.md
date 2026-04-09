@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Notepad (Next.js + Supabase)
 
-## Getting Started
+Simple notepad with **email/password signup and login**, **session cookie** (via [iron-session](https://github.com/vvo/iron-session)), and **CRUD notes** stored in Supabase. There is **no Express** server—APIs are **Next.js Route Handlers** under `app/api/`.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 20+ recommended
+- A Supabase project
+
+## 1. Database setup
+
+1. Open the Supabase dashboard → **SQL** → **New query**.
+2. Paste and run the SQL in `supabase/schema.sql` (creates `users`, `notes` with `updated_at` and `pinned`).
+3. If you created `notes` **before** those columns existed, also run `supabase/migrate_notes_v2.sql` once.
+4. Ensure **RLS is off** for `users` and `notes` (or policies allow anon CRUD), matching the “simple database” brief.
+
+### App features
+
+- **Light UI** — single white / soft-gray theme (no dark mode).
+- **Search** — filter by title or body text.
+- **Sort** — newest, oldest, or title A–Z (pinned notes stay grouped at the top when sorting by date).
+- **Pin** — star notes so they rise to the top of the list.
+- **Copy / export** — copy to clipboard or download a `.txt` file.
+- **Stats** — word and character counts on new notes and existing notes.
+- **Keyboard** — **Ctrl+S** / **⌘S** saves while editing a note.
+- **Timestamps** — created time; “Updated” appears after edits (uses `updated_at`).
+
+## 2. Environment variables
+
+1. Copy `.env.example` to `.env.local`.
+2. Set:
+   - `SUPABASE_URL` — Project URL
+   - `SUPABASE_ANON_KEY` — Project API **anon** key
+   - `SESSION_SECRET` — Any random string **at least 32 characters** (encrypts the session cookie)
+
+## 3. Install and run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Sign up, then use the dashboard to manage notes.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Production:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project layout
 
-To learn more about Next.js, take a look at the following resources:
+| Path | Role |
+|------|------|
+| `app/api/auth/*` | Signup, login, logout |
+| `app/api/notes/*` | List/create/update/delete notes |
+| `app/login`, `app/signup` | Auth pages |
+| `app/dashboard` | Notes UI (server-loads notes, client edits) |
+| `lib/session.ts` | Encrypted cookie session |
+| `lib/supabase.ts` | Supabase client (server-only usage) |
+| `components/*` | Auth forms, `NotesClient`, `NoteCard` |
+| `lib/note-utils.ts` | Word/char counts and safe download filenames |
+| `supabase/migrate_notes_v2.sql` | Adds `updated_at` / `pinned` for older databases |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Security note
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Using the anon key on the server with RLS disabled is fine for learning; for production, enable RLS and/or use a service role only on trusted servers.

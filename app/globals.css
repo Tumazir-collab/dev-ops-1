@@ -1,8 +1,24 @@
 @import "tailwindcss";
 
+/* Light mode only — no dark theme. */
 :root {
+  --np-bg: #f1f5f9;
+  --np-surface: #ffffff;
+  --np-surface-2: #f8fafc;
+  --np-border: #e2e8f0;
+  --np-border-strong: #cbd5e1;
+  --np-text: #0f172a;
+  --np-muted: #64748b;
+  --np-accent: #4f46e5;
+  --np-accent-hover: #4338ca;
+  --np-accent-soft: #eef2ff;
+  --np-danger: #dc2626;
+  --np-danger-soft: #fef2f2;
+  --np-shadow: 0 1px 3px rgb(15 23 42 / 0.06), 0 8px 24px rgb(15 23 42 / 0.06);
+  --np-radius: 12px;
+  --np-radius-sm: 8px;
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a;
 }
 
 @theme inline {
@@ -12,15 +28,413 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  background: var(--np-bg);
+  color: var(--np-text);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* --- Layout shells --- */
+
+.np-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+.np-shell {
+  width: 100%;
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+}
+
+.np-wide {
+  max-width: 52rem;
+}
+
+.np-hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.np-hero-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--np-accent);
+  background: var(--np-accent-soft);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+.np-hero h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--np-text);
+}
+
+.np-hero p {
+  margin: 0 auto;
+  max-width: 22rem;
+  color: var(--np-muted);
+  font-size: 1rem;
+}
+
+.np-card-elevated {
+  background: var(--np-surface);
+  border: 1px solid var(--np-border);
+  border-radius: var(--np-radius);
+  box-shadow: var(--np-shadow);
+  padding: 1.75rem;
+}
+
+.np-features {
+  margin-top: 1.5rem;
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--np-muted);
+}
+
+.np-features li {
+  margin-bottom: 0.35rem;
+  padding-left: 0.25rem;
+}
+
+.np-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.75rem;
+}
+
+/* --- Forms (auth + notes) --- */
+
+.np-form h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--np-text);
+}
+
+.np-form .np-sub {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+  color: var(--np-muted);
+}
+
+.np-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--np-text);
+}
+
+.np-input,
+.np-textarea,
+.np-select {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--np-border);
+  border-radius: var(--np-radius-sm);
+  font: inherit;
+  background: var(--np-surface);
+  color: var(--np-text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.np-input:focus,
+.np-textarea:focus,
+.np-select:focus {
+  outline: none;
+  border-color: var(--np-accent);
+  box-shadow: 0 0 0 3px var(--np-accent-soft);
+}
+
+.np-textarea {
+  resize: vertical;
+  min-height: 5.5rem;
+}
+
+.np-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--np-accent);
+  border-radius: var(--np-radius-sm);
+  background: var(--np-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.np-button:hover:not(:disabled) {
+  background: var(--np-accent-hover);
+  border-color: var(--np-accent-hover);
+}
+
+.np-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.np-button-secondary {
+  background: var(--np-surface);
+  color: var(--np-text);
+  border-color: var(--np-border-strong);
+}
+
+.np-button-secondary:hover:not(:disabled) {
+  background: var(--np-surface-2);
+  border-color: var(--np-border-strong);
+}
+
+.np-button-ghost {
+  background: transparent;
+  color: var(--np-text);
+  border-color: transparent;
+  font-weight: 500;
+}
+
+.np-button-ghost:hover:not(:disabled) {
+  background: var(--np-surface-2);
+}
+
+.np-button-danger {
+  background: var(--np-danger);
+  border-color: var(--np-danger);
+}
+
+.np-button-danger:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.np-button-sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.np-button-icon {
+  padding: 0.4rem 0.55rem;
+  min-width: 2.25rem;
+}
+
+.np-link {
+  color: var(--np-accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.np-link:hover {
+  text-decoration: underline;
+}
+
+.np-muted {
+  color: var(--np-muted);
+  font-size: 0.9rem;
+}
+
+.np-error {
+  color: var(--np-danger);
+  background: var(--np-danger-soft);
+  border: 1px solid #fecaca;
+  border-radius: var(--np-radius-sm);
+  padding: 0.6rem 0.75rem;
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+}
+
+/* --- Dashboard --- */
+
+.np-dash {
+  width: 100%;
+}
+
+.np-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.35rem;
+  background: var(--np-surface);
+  border: 1px solid var(--np-border);
+  border-radius: var(--np-radius);
+  box-shadow: var(--np-shadow);
+}
+
+.np-bar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--np-text);
+}
+
+.np-bar-meta {
+  font-size: 0.875rem;
+  color: var(--np-muted);
+  margin-top: 0.2rem;
+}
+
+.np-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.np-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.np-toolbar-grow {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.np-search {
+  width: 100%;
+}
+
+.np-section {
+  margin-bottom: 1.75rem;
+}
+
+.np-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.np-section h2 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--np-muted);
+  margin: 0;
+}
+
+.np-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.np-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.np-card {
+  border: 1px solid var(--np-border);
+  border-radius: var(--np-radius);
+  padding: 1.1rem 1.2rem;
+  background: var(--np-surface);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+}
+
+.np-card-pinned {
+  border-color: #c7d2fe;
+  background: linear-gradient(180deg, #fafbff 0%, #ffffff 100%);
+}
+
+.np-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.np-row-spread {
+  justify-content: space-between;
+}
+
+.np-stat {
+  font-size: 0.75rem;
+  color: var(--np-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.np-small {
+  font-size: 0.8rem;
+}
+
+.np-pin-active {
+  color: #ca8a04;
+}
+
+/* Toast */
+.np-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: 0.6rem 1.1rem;
+  background: var(--np-text);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: var(--np-shadow);
+  animation: np-toast-in 0.2s ease;
+}
+
+@keyframes np-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.np-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--np-muted);
+  font-size: 0.95rem;
+  border: 1px dashed var(--np-border);
+  border-radius: var(--np-radius);
+  background: var(--np-surface-2);
 }
